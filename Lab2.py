@@ -1,6 +1,7 @@
 import threading
 import queue
 import os
+import time
 
 buffer_size = 5
 
@@ -22,23 +23,24 @@ def producer(top_dir, queue_buffer):
         if os.path.isdir(filepath):
             producer(filepath, queue_buffer)
 
-     
-            
-        
 
 
 def consumer(queue_buffer):
+    
     global file_count
     # search file in directory
     a = queue.get()
     for i in os.listdir(a):
+        start_time=time.time()
         b = os.path.join(a, i)
         if os.path.isfile(b):
             lock.acquire()
             file_count +=1
             print(file_count)
             lock.release()
-        
+        end_time=time.time()
+        if end_time-start_time>1:
+            break
 
 
 def main():
